@@ -11,15 +11,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t anilkumarjena22/backend ./backend'
-                sh 'docker build -t anilkumarjena22/frontend ./frontend'
+                bat 'docker build -t anilkumarjena22/backend ./backend'
+                bat 'docker build -t anilkumarjena22/frontend ./frontend'
             }
         }
 
         stage('Push Image') {
             steps {
-                sh 'docker push anilkumarjena22/backend'
-                sh 'docker push anilkumarjena22/frontend'
+                bat 'docker push anilkumarjena22/backend'
+                bat 'docker push anilkumarjena22/frontend'
             }
         }
 
