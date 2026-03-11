@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/anilkj-hub/AWS-deployement.git'
+                git branch: 'main', url: 'https://github.com/anilkj-hub/AWS-deployement.git'
             }
         }
 
