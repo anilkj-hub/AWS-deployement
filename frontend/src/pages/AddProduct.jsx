@@ -38,6 +38,7 @@ function AddProduct() {
 
   return (
     <section className="card form-card">
+      <p className="form-caption">Create inventory item</p>
       <h2>Add Product</h2>
       {error && <p className="message error">{error}</p>}
       <form className="form-grid" onSubmit={handleSubmit}>

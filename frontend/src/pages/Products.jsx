@@ -36,7 +36,10 @@ function Products() {
   return (
     <section>
       <div className="section-head">
-        <h2>Products</h2>
+        <div>
+          <h2 className="section-title">Products</h2>
+          <p className="section-subtitle">Live inventory list from backend API</p>
+        </div>
         <button className="btn btn-secondary" onClick={loadProducts} type="button">
           Refresh
         </button>
@@ -46,6 +49,24 @@ function Products() {
       {loading && <p className="message">Loading products...</p>}
 
       {!loading && products.length === 0 && <p className="message">No products found.</p>}
+
+      {!loading && products.length > 0 && (
+        <div className="overview-grid">
+          <article className="card overview-card">
+            <p>Total Products</p>
+            <strong>{products.length}</strong>
+          </article>
+          <article className="card overview-card">
+            <p>Total Inventory Value</p>
+            <strong>
+              $
+              {products
+                .reduce((sum, item) => sum + Number(item.price || 0), 0)
+                .toFixed(2)}
+            </strong>
+          </article>
+        </div>
+      )}
 
       {!loading && products.length > 0 && (
         <div className="table-wrapper card">

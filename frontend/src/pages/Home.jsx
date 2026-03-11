@@ -34,6 +34,15 @@ function Home() {
           <p>Frontend and backend containerized</p>
         </article>
       </div>
+
+      <div className="card spotlight-card">
+        <p className="spotlight-label">Why this UI works</p>
+        <h3>Fast workflow for product teams</h3>
+        <p>
+          Every page focuses on one action, so adding or reviewing inventory takes less time and fewer
+          clicks.
+        </p>
+      </div>
     </section>
   );
 }
