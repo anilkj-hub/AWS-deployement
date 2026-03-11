@@ -1,27 +1,61 @@
 pipeline {
     agent any
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    environment {
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+        DOCKER_NAMESPACE = 'anilkumarjena22'
+        BACKEND_IMAGE = 'backend'
+        FRONTEND_IMAGE = 'frontend'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
+    }
+
     stages {
-
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/anilkj-hub/AWS-deployement.git'
+                checkout scm
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Images') {
             steps {
-                bat 'docker build -t anilkumarjena22/backend ./backend'
-                bat 'docker build -t anilkumarjena22/frontend ./frontend'
+                bat "docker build -t %DOCKER_NAMESPACE%/%BACKEND_IMAGE%:latest -t %DOCKER_NAMESPACE%/%BACKEND_IMAGE%:%IMAGE_TAG% ./backend"
+                bat "docker build -t %DOCKER_NAMESPACE%/%FRONTEND_IMAGE%:latest -t %DOCKER_NAMESPACE%/%FRONTEND_IMAGE%:%IMAGE_TAG% ./frontend"
             }
         }
 
-        stage('Push Image') {
+        stage('Docker Hub Login') {
             steps {
-                bat 'docker push anilkumarjena22/backend'
-                bat 'docker push anilkumarjena22/frontend'
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                }
             }
         }
 
+        stage('Push Docker Images') {
+            steps {
+                bat "docker push %DOCKER_NAMESPACE%/%BACKEND_IMAGE%:latest"
+                bat "docker push %DOCKER_NAMESPACE%/%BACKEND_IMAGE%:%IMAGE_TAG%"
+                bat "docker push %DOCKER_NAMESPACE%/%FRONTEND_IMAGE%:latest"
+                bat "docker push %DOCKER_NAMESPACE%/%FRONTEND_IMAGE%:%IMAGE_TAG%"
+            }
+        }
+    }
+
+    post {
+        always {
+            bat 'docker logout || exit /b 0'
+        }
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
     }
 }
