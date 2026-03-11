@@ -4,7 +4,10 @@ function Navbar() {
   return (
     <header className="header">
       <div className="container nav-content">
-        <h1 className="logo">Product Manager</h1>
+        <div className="brand-block">
+          <h1 className="logo">Product Manager</h1>
+          <p className="brand-subtitle">Inventory control dashboard</p>
+        </div>
         <nav className="nav-links">
           <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")} end>
             Home

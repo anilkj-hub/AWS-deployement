@@ -62,7 +62,9 @@ function Products() {
               {products.map((product) => (
                 <tr key={product.id}>
                   <td>{product.name}</td>
-                  <td>{product.category}</td>
+                  <td>
+                    <span className="category-pill">{product.category}</span>
+                  </td>
                   <td>${Number(product.price).toFixed(2)}</td>
                   <td>
                     <button
